@@ -9,6 +9,7 @@ use App\Countries;
 use App\States;
 use App\Cities;
 use App\Role;
+use App\Role_user;
 use Validator;
 
 
@@ -158,9 +159,15 @@ class UsuarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        //verifica que sea administrador
+        $request->user()->authorizeRoles(['admin']);
+        
+        // Eliminar usuario
+        $personal = User::destroy($id);
+        $deletedRows = Role_User::where('user_id', $id)->delete();
+        return response()->json([ 'success'=> 'Registro Eliminado']);
     }
 
     //cargar los estados de acuerdo a los paises

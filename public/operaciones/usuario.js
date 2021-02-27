@@ -355,5 +355,51 @@ $('#FormEditar').formValidation({
     });
 }); 
 
+//eliminar registro
+function eliminar(id) {
+    $.ajax({
+        type: 'GET',
+        url: '/usuario/' + id,
+        success: function(data) {
+            $("#eliminar-titulo").html("¿Desea Eliminar este usuario (" +data.usuario.nombres+" "+data.usuario.apellidos+")?");
+            $("#FormEliminar input[name=codigo]").val(data.usuario.codigo);
+            $('#ModalEliminar').modal('show');
+        }
+    });
+}
+
+$("#btn-eliminar").click(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        type: 'DELETE',
+        url: '/usuario/' + $("#FormEliminar input[name=codigo]").val(),
+        dataType: 'json',
+        success:function(response){
+            if (response) {
+
+                Toast.fire({
+                   icon: 'success',
+                   title: response.success
+                });
+
+                actualizar()
+                $("#ModalEliminar").modal('hide');
+            }
+        },
+        error: function(response) {
+
+                Toast.fire({
+                   icon: 'error',
+                   title: 'Lo siento error inesperado.'
+                });  
+
+        }
+    });
+});
+
 
 

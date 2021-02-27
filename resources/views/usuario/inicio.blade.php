@@ -34,6 +34,8 @@
     @include('usuario.agregar')
     <!-- Modal editar usuario-->
     @include('usuario.editar')
+    <!-- Modal eliminar usuario-->
+    @include('usuario.eliminar')
 @endsection
 @section('js')
     <script src="{{ asset('assets') }}/formvalidation/formValidation.js" defer=""></script>
