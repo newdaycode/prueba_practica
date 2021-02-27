@@ -6,6 +6,9 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Role;
+use App\Cities;
+use App\Countries;
+use App\States;
 
 class User extends Authenticatable
 {
@@ -17,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'names','last_names','email','phone','password','identification','date_of_birth','cities_id',
     ];
 
     /**
@@ -74,6 +77,19 @@ class User extends Authenticatable
             return true;
         }
         return false;
+    }
+
+
+    public static function usuarios(){
+         
+
+        //datos de usuarios con su ubicacion
+        return $usuarios= Countries::join('states', 'states.countries_id', '=', 'countries.id')
+            ->join('cities', 'cities.states_id', '=', 'states.id')
+            ->join('users', 'users.cities_id', '=', 'cities.id')
+            ->select('users.names as nombres','users.last_names as apellidos', 'users.email as email', 'users.phone as telefono', 'users.identification as identificacion', 'users.date_of_birth as fecha', 'cities.city_name as ciudad', 'states.state_name as estado', 'countries.country_name as pais', 'users.id as codigo');
+
+
     }
 
     
