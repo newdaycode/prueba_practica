@@ -84,25 +84,6 @@ function cargarciudad(estado){
     })
 }
 
-
-FormValidation.Validator.mayorEdad = {
-    validate: function(validator, $field, options) {
-        var value = $field.val();
-        
-       
-        var fechanacimiento = moment(value, "DD-MM-YYYY");
-      
-        if(!fechanacimiento.isValid())
-            return false;
-      
-        var years = moment().diff(fechanacimiento, 'years');
-      
-        return years > 15;
-           
-    }
-};
-
-
 //Nuevo Registro
 $('#FormRegistro').formValidation({
   framework: "bootstrap4",

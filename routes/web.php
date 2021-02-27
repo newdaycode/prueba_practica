@@ -27,8 +27,11 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('usuario', 'UsuarioController');
 	Route::get('listado_usuario', 'UsuarioController@getusuario');
 	//Buscador de usuario
-	Route::get('buscador', 'UsuarioController@buscador')->name('buscador');
+	Route::get('buscador', 'UsuarioController@buscador')->name('buscador');	
 
+	//Rutas de email
+	Route::resource('email', 'TodoController');
+	Route::get('listado_email', 'TodoController@getemail');
 
 
 	//cargar estados

@@ -24,6 +24,18 @@
                     <a class="collapse-item {{ $activePage == 'usuario' ? ' active' : '' }}" href="{{ route('usuario.index') }}">Listado de Usuario</a>
                 </div>
             </div>
+        </li>         
+        <hr class="sidebar-divider">
+        <li class="nav-item {{ $activePage == 'email' ? ' active' : '' }}">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseemail" aria-expanded="true" aria-controls="collapseemail">
+                <i class="fas fa-fw fa-list"></i>
+                <span>email</span>
+            </a>
+            <div id="collapseemail" class="collapse {{ $activePage == 'email' ? ' show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item {{ $activePage == 'email' ? ' active' : '' }}" href="{{ route('email.index') }}">Listado de email</a>
+                </div>
+            </div>
         </li> 
 
 
