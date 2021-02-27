@@ -58,6 +58,7 @@ class User extends Authenticatable
         //si recibo varios roles
         if (is_array($roles)) {
             foreach ($roles as $role) {
+                session(['rol' => $role]);
                 if ($this->hasRole($role)) {
                     return true;
                 }
@@ -65,6 +66,8 @@ class User extends Authenticatable
         } else {//si es un solo rol
             if ($this->hasRole($roles)) {
                  return true; 
+                 session(['rol' => $roles]);
+
             }   
         }
         return false;

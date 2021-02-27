@@ -11,18 +11,23 @@
             <span>Inicio</span>
         </a>
     </li>
-    <hr class="sidebar-divider">
-    <li class="nav-item {{ $activePage == 'usuario' ? ' active' : '' }}">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseusuario" aria-expanded="true" aria-controls="collapseusuario">
-            <i class="fas fa-fw fa-users"></i>
-            <span>Usuario</span>
-        </a>
-        <div id="collapseusuario" class="collapse {{ $activePage == 'usuario' ? ' show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item {{ $activePage == 'usuario' ? ' active' : '' }}" href="{{ route('usuario.index') }}">Listado de Usuario</a>
+    @if(Session::get('rol') == 'admin')
+
+        <hr class="sidebar-divider">
+        <li class="nav-item {{ $activePage == 'usuario' ? ' active' : '' }}">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseusuario" aria-expanded="true" aria-controls="collapseusuario">
+                <i class="fas fa-fw fa-users"></i>
+                <span>Usuario</span>
+            </a>
+            <div id="collapseusuario" class="collapse {{ $activePage == 'usuario' ? ' show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item {{ $activePage == 'usuario' ? ' active' : '' }}" href="{{ route('usuario.index') }}">Listado de Usuario</a>
+                </div>
             </div>
-        </div>
-    </li> 
+        </li> 
+
+
+    @endif
     <hr class="sidebar-divider d-none d-md-block">
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
