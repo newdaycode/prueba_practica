@@ -32,6 +32,8 @@
     </div>
     <!-- Modal de agregar usuario-->
     @include('usuario.agregar')
+    <!-- Modal editar usuario-->
+    @include('usuario.editar')
 @endsection
 @section('js')
     <script src="{{ asset('assets') }}/formvalidation/formValidation.js" defer=""></script>

@@ -89,9 +89,16 @@ class UsuarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+
+        $request->user()->authorizeRoles(['admin']);
+        $usuario= User::usuarios()->where('users.id', '=', $id)->first();
+
+        // //envia en un json la respuesta
+        return response()->json([
+            'usuario'  => $usuario,
+        ], 200);
     }
 
     /**
@@ -114,7 +121,35 @@ class UsuarioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        //verifica que sea administrador
+        $request->user()->authorizeRoles(['admin']);
+
+        //valida datos del usuario
+        $request->validate([
+            'editar_nombres' => 'required|max:100',
+            'editar_apellidos' => 'required|max:100',
+            'email' => 'required',
+            'editar_telefono' => 'required|max:11',
+            'identification' => 'required|integer|min:11',
+            'editar_ciudad' => 'required|integer',
+            'editar_fecha' => 'required|date',
+        ]);
+
+        //actualizar usuario
+        $usuario = User::where('id', '=', $id)->first();
+        $usuario->names=$request->input('editar_nombres');
+        $usuario->last_names=$request->input('editar_apellidos');
+        $usuario->email=$request->input('email');
+        $usuario->phone=$request->input('editar_telefono');
+        $usuario->identification=$request->input('identification');
+        $usuario->date_of_birth=$request->input('editar_fecha');
+        $usuario->cities_id=$request->input('editar_ciudad');
+        $usuario->save();
+
+        return response()->json([ 'success'=> 'Registro Actualizado']);
+
+
     }
 
     /**
@@ -166,10 +201,7 @@ class UsuarioController extends Controller
     {
 
         $texto = $request->texto;
-        $usuarios= Countries::join('states', 'states.countries_id', '=', 'countries.id')
-            ->join('cities', 'cities.states_id', '=', 'states.id')
-            ->join('users', 'users.cities_id', '=', 'cities.id')
-            ->select('users.names as nombres','users.last_names as apellidos', 'users.email as email', 'users.phone as telefono', 'users.identification as identificacion', 'users.date_of_birth as fecha', 'cities.city_name as ciudad', 'states.state_name as estado', 'countries.country_name as pais', 'users.id as codigo')
+        $usuarios= User::usuarios()
             ->where(function($query) use($texto) {
                   $query = $query->orWhere('users.names','like',"%$texto%");
                   $query = $query->orWhere('users.last_names','like',"%$texto%");

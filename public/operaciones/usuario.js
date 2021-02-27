@@ -8,11 +8,11 @@ var Toast = Swal.mixin({
 
 //Calcular edad segun la fecha de nacimiento
 $(function(){
-  $('#fecha').on('change', calcularEdad);
+  $('.fecha').on('change', calcularEdad);
 });
     
 function calcularEdad() {
-    
+
     fecha = $(this).val();
     var hoy = new Date();
     var cumpleanos = new Date(fecha);
@@ -22,16 +22,16 @@ function calcularEdad() {
     if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
         edad--;
     }
-    $('#edad').val(edad);
+    $('.edad').val(edad);
 
     if(edad > 15){
         // aqui haces lo que quieras con la validacion de si es mayor a 15
       
     }else{
 
-        $("#edad").val('');
-        $("#fecha").val('');
-        $("#msj").html('<small class="text-help" data-fv-validator="notEmpty" data-fv-for="identificacion" data-fv-result="INVALID" style="">Debe ser mayor a 15 años</small>');
+        $(".edad").val('');
+        $('.fecha').val('');
+        $('.msj').html('<small class="text-help" data-fv-validator="notEmpty" data-fv-for="identificacion" data-fv-result="INVALID" style="">Debe ser mayor a 15 años</small>');
     }
 }
 
@@ -44,9 +44,9 @@ $("#agregar").on('click', function(){
 })
 
 //hace el llamado para cargar los estados
-$("#pais").change(function(){
-  var pais=$("#pais").val();
-
+$('.pais').change(function(){
+    
+    var pais=$(this).val();
     cargarestado(pais);
 
 });
@@ -55,18 +55,18 @@ $("#pais").change(function(){
 function cargarestado(pais){
 
     $.get('/estados/'+pais, function(response){
-        $("#estado").empty();
+        $(".estado").empty();
         cargarciudad(response.estados[0].id)
         $(response.estados).each(function(i, valor){ // indice, valor
-          $("#estado").append('<option value="'+valor.id+'">'+valor.state_name+'</option>');
+          $(".estado").append('<option value="'+valor.id+'">'+valor.state_name+'</option>');
         })
 
     })
 
 }
 
-$("#estado").change(function(){
-  var estado=$("#estado").val();
+$(".estado").change(function(){
+    var estado=$(this).val();
 
     cargarciudad(estado);
 
@@ -76,13 +76,31 @@ $("#estado").change(function(){
 function cargarciudad(estado){
 
     $.get('/ciudad/'+estado, function(response){
-        $("#ciudad").empty();
+        $(".ciudad").empty();
         $(response.ciudades).each(function(i, valor){ // indice, valor
-          $("#ciudad").append('<option value="'+valor.id+'">'+valor.city_name+'</option>');
+          $(".ciudad").append('<option value="'+valor.id+'">'+valor.city_name+'</option>');
         })
 
     })
 }
+
+
+FormValidation.Validator.mayorEdad = {
+    validate: function(validator, $field, options) {
+        var value = $field.val();
+        
+       
+        var fechanacimiento = moment(value, "DD-MM-YYYY");
+      
+        if(!fechanacimiento.isValid())
+            return false;
+      
+        var years = moment().diff(fechanacimiento, 'years');
+      
+        return years > 15;
+           
+    }
+};
 
 
 //Nuevo Registro
@@ -137,7 +155,7 @@ $('#FormRegistro').formValidation({
         },
       }
     },
-  },  
+  },
   err: {
     clazz: 'text-help'
   },
@@ -159,17 +177,16 @@ $('#FormRegistro').formValidation({
         type: "POST",
         data: $("#FormRegistro").serialize(),
         success:function(response){
-        console.log(response);
-        if (response) {
+            if (response) {
 
-                Toast.fire({
-                   icon: 'success',
-                   title: response.success
-                });
+                    Toast.fire({
+                       icon: 'success',
+                       title: response.success
+                    });
 
-                actualizar()
-                $("#ModalRegistro").modal('hide');
-        }
+                    actualizar()
+                    $("#ModalRegistro").modal('hide');
+            }
         },
         error: function(response) {
 
@@ -219,6 +236,124 @@ function myFunction(elemento){
     }
 
 }
+
+function editar(id) {
+
+    $.ajax({
+        type: 'GET',
+        url: '/usuario/' + id,
+        success: function(data) {
+
+            $("#FormEditar input[name=editar_nombres]").val(data.usuario.nombres);
+            $("#FormEditar input[name=editar_apellidos]").val(data.usuario.apellidos);
+            $("#FormEditar input[name=email]").val(data.usuario.email);
+            $("#FormEditar input[name=editar_telefono]").val(data.usuario.telefono);
+            $("#FormEditar input[name=identification]").val(data.usuario.identificacion);
+            $("#FormEditar input[name=editar_fecha]").val(data.usuario.fecha);
+
+            var hoy = new Date();
+            var cumpleanos = new Date(data.usuario.fecha);
+            var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+            var m = hoy.getMonth() - cumpleanos.getMonth();
+
+            if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+                edad--;
+            }
+
+            $("#FormEditar input[name=edad_editar]").val(edad);
+            $("#editar_pais").append('<option value="'+data.usuario.codigo_pais+'" selected="selected">'+data.usuario.pais+'</option>');
+            $("#editar_estado").append('<option value="'+data.usuario.estado_codigo+'" selected="selected">'+data.usuario.estado+'</option>');
+            $("#editar_ciudad").append('<option value="'+data.usuario.codigo_ciudad+'" selected="selected">'+data.usuario.ciudad+'</option>');
+            $("#FormEditar input[name=codigo_editar]").val(data.usuario.codigo);
+            $('#ModalEditar').modal('show');
+        }
+    });
+}
+
+
+//editar localidad
+$('#FormEditar').formValidation({
+  framework: "bootstrap4",
+  button: {
+    selector: '#editar',
+    disabled: 'disabled'
+  },
+  icon: null,
+  fields: {
+    identification: {
+      validators: {
+        notEmpty: {
+          message: 'La Clave es requerida'
+        },
+        stringLength: {
+          min: 11,
+          max: 11,
+          message: 'Deben contener 11 caracteres, '
+        },
+        numeric: {
+            message: 'El Valor debe ser numerico',
+            thousandsSeparator: '',
+            decimalSeparator: '.'
+        },
+      }
+    },
+    editar_telefono: {
+      validators: {
+        stringLength: {
+          min: 8,
+          max: 11,
+          message: 'Deben contener minimo 8 y maximo 11 Digitos '
+        },
+        numeric: {
+            message: 'El Valor debe ser numerico',
+            // The default separators
+            thousandsSeparator: '',
+            decimalSeparator: '.'
+        },
+      }
+    },
+  }, 
+  err: {
+    clazz: 'text-help'
+  },
+  row: {
+    invalid: 'has-danger'
+  }
+})
+.on('success.form.fv', function(e) {
+    e.preventDefault();
+
+    var codigo = $("#FormEditar input[name=codigo_editar]").val();
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.ajax({
+        type: 'PUT',
+        url: '/usuario/'+ codigo,
+        data: $("#FormEditar").serialize(),
+        dataType: 'json',
+        success:function(response){
+            if (response) {
+
+                Toast.fire({
+                   icon: 'success',
+                   title: response.success
+                });
+
+                actualizar()
+                $("#ModalEditar").modal('hide');
+            }
+        },
+        error: function(response) {
+
+            printErrorMsg(response.responseJSON.errors);
+
+        }
+    });
+}); 
 
 
 

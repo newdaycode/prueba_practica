@@ -87,7 +87,7 @@ class User extends Authenticatable
         return $usuarios= Countries::join('states', 'states.countries_id', '=', 'countries.id')
             ->join('cities', 'cities.states_id', '=', 'states.id')
             ->join('users', 'users.cities_id', '=', 'cities.id')
-            ->select('users.names as nombres','users.last_names as apellidos', 'users.email as email', 'users.phone as telefono', 'users.identification as identificacion', 'users.date_of_birth as fecha', 'cities.city_name as ciudad', 'states.state_name as estado', 'countries.country_name as pais', 'users.id as codigo');
+            ->select('users.names as nombres','users.last_names as apellidos', 'users.email as email', 'users.phone as telefono', 'users.identification as identificacion', 'users.date_of_birth as fecha', 'cities.city_name as ciudad', 'cities.id as codigo_ciudad', 'states.state_name as estado', 'states.id as estado_codigo', 'countries.country_name as pais', 'countries.id as codigo_pais', 'users.id as codigo');
 
 
     }

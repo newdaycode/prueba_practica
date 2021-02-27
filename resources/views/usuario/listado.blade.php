@@ -29,8 +29,12 @@
                         <div class="btn-group">
                             <button class="btn btn-rounded btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Opciones</button>
                             <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 30px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                <a onclick="event.preventDefault();editar({{$usuario->codigo}});" href="#" class="dropdown-item" title="Editar">Editar</a>
-                                <a onclick="event.preventDefault();eliminar({{$usuario->codigo}});" href="#" class="dropdown-item" title="Eliminar">Eliminar</a>
+                                @if($usuario->email==Auth::user()->email)
+                                    <a onclick="event.preventDefault();editar({{$usuario->codigo}});" href="#" class="dropdown-item" title="Editar">Editar</a>
+                                @else
+                                    <a onclick="event.preventDefault();editar({{$usuario->codigo}});" href="#" class="dropdown-item" title="Editar">Editar</a>
+                                    <a onclick="event.preventDefault();eliminar({{$usuario->codigo}});" href="#" class="dropdown-item" title="Eliminar">Eliminar</a>
+                                @endif
                             </div>
                         </div>
                     </div>                    
