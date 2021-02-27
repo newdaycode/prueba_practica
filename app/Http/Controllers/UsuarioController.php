@@ -160,4 +160,27 @@ class UsuarioController extends Controller
         return response()->json(compact('html'));
     }  
 
+
+    //Buscador de usuario
+    public function buscador(Request $request)
+    {
+
+        $texto = $request->texto;
+        $usuarios= Countries::join('states', 'states.countries_id', '=', 'countries.id')
+            ->join('cities', 'cities.states_id', '=', 'states.id')
+            ->join('users', 'users.cities_id', '=', 'cities.id')
+            ->select('users.names as nombres','users.last_names as apellidos', 'users.email as email', 'users.phone as telefono', 'users.identification as identificacion', 'users.date_of_birth as fecha', 'cities.city_name as ciudad', 'states.state_name as estado', 'countries.country_name as pais', 'users.id as codigo')
+            ->where(function($query) use($texto) {
+                  $query = $query->orWhere('users.names','like',"%$texto%");
+                  $query = $query->orWhere('users.last_names','like',"%$texto%");
+                  $query = $query->orWhere('users.identification','like',"%$texto%");
+                  $query = $query->orWhere('users.email','like',"%$texto%");
+                  $query = $query->orWhere('users.phone','like',"%$texto%");
+            })->paginate(5);
+
+        return view('usuario.listado', compact('usuarios'))->render();
+    }  
+
+
+
 }

@@ -37,6 +37,8 @@ function calcularEdad() {
 
 //abrir modal para el registro y reiniciar el formulario
 $("#agregar").on('click', function(){
+    $(".print-error-msg").find("ul").html('');
+    $(".print-error-msg").css('display','none');
     $('#FormRegistro').trigger("reset");
     $("#ModalRegistro").modal('show');
 })
@@ -195,4 +197,28 @@ function actualizar(){
 
     })
 }
+
+
+//buscar en tiempo real por Nombre, apellido, documento identificación, email,teléfono
+function myFunction(elemento){
+
+    //toma las letras para buscar
+    var texto = elemento.value;
+    if((texto.length)>=1){
+        fetch(`/buscador?texto=${texto}`,{ method:'get' })
+        .then(response  =>  response.text() )
+        .then(html      =>  {   
+
+            var $contenido = $('.tabla-usuario');
+            $contenido.html(html);  
+
+        })
+    }else{
+        
+        actualizar()
+    }
+
+}
+
+
 

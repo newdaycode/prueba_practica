@@ -7,15 +7,19 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Listado de Usuarios</h6>
+                <div class="text-right">
+                    <button id="agregar" class="btn btn-rounded btn-outline-primary" type="button">
+                        <i class="icon wb-plus" aria-hidden="true"></i> Nuevo Registro
+                    </button>
+                </div>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="text-right">
-                            <button id="agregar" class="btn btn-rounded btn-outline-primary" type="button">
-                                <i class="icon wb-plus" aria-hidden="true"></i> Nuevo Registro
-                            </button>
-                        </div>
+                        <form class="form-inline">
+                            <input class="form-control" type="text" placeholder="Buscar" aria-label="Buscar" id="buscador" onkeyup="myFunction(this)">
+                            <button class="btn btn-primary" type="submit">Buscar</button>
+                        </form>
                     </div>
                 </div>
                 <br>
